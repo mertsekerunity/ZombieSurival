@@ -6,7 +6,11 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] Transform target;
-    NavMeshAgent navMeshAgent; 
+    [SerializeField] float chaseRange = 10f;
+
+    float distanceToTarget = Mathf.Infinity;
+
+    NavMeshAgent navMeshAgent;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +21,17 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        navMeshAgent.SetDestination(target.position);
+        distanceToTarget = Vector3.Distance(target.position, transform.position);
+
+        if (distanceToTarget <= chaseRange)
+        {
+            navMeshAgent.SetDestination(target.position);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, chaseRange);
     }
 }
