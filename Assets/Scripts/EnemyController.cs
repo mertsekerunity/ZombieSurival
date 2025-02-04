@@ -11,46 +11,49 @@ public class EnemyController : MonoBehaviour
     float distanceToTarget = Mathf.Infinity;
 
     bool isProvoked = false;
-    bool isAttacking = false;
 
     Animator animator;
     NavMeshAgent navMeshAgent;
-
-    private void Awake()
-    {
-        animator = GetComponentInChildren<Animator>();
-    }
 
     // Start is called before the first frame update
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-        animator.SetFloat("MoveSpeed", 0);
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
     void Update()
-    {   isAttacking = false;
+    {
         distanceToTarget = Vector3.Distance(target.position, transform.position);
+
+        if (!isProvoked)
+        {
+            Debug.Log("is provoked: " + isProvoked);
+            Debug.Log("distance to target is: " + distanceToTarget);
+        }
+        
 
         if (isProvoked)
         {
             EngageTarget();
         }
-        else if (distanceToTarget <= chaseRange)
+        if (distanceToTarget <= chaseRange)
         {
             isProvoked = true;
         }
         else 
         {
-            animator.SetTrigger("Reset");
-            animator.SetFloat("MoveSpeed", 0);
+            isProvoked = false;
+            animator.SetBool("Attack", false);
+            animator.SetBool("Move", false);
         }
     }
 
     void ChaseTarget()
     {
-        animator.SetFloat("MoveSpeed", 1);
+        animator.SetBool("Attack", false);
+        animator.SetBool("Move", true);
         navMeshAgent.SetDestination(target.position);
     }
 
@@ -65,17 +68,13 @@ public class EnemyController : MonoBehaviour
         if (distanceToTarget <= navMeshAgent.stoppingDistance)
         {
             AttackTarget();
-            isAttacking = true;
+
         }
     }
 
     void AttackTarget()
     {
-        if (!isAttacking)
-        {
-            animator.SetTrigger("Attack");
-        }
-        //isAttacking = false;
+        animator.SetBool("Attack", true);
         Debug.Log(name + "has seeked and is attacking" + target.name);
     }
 
@@ -83,5 +82,9 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, chaseRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, navMeshAgent.stoppingDistance);
+
     }
 }
