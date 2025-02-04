@@ -20,7 +20,7 @@ public class EnemyHealth : MonoBehaviour
         {
             animator.SetFloat("MoveSpeed", 0);
             animator.SetTrigger("Dead");
-            Destroy(gameObject, destroyDelay);
+            //Destroy(gameObject, destroyDelay);
         }
     }
 }

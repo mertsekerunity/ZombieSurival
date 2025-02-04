@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   isAttacking = false;
+    {
         distanceToTarget = Vector3.Distance(target.position, transform.position);
 
         if (isProvoked)
@@ -41,7 +41,7 @@ public class EnemyController : MonoBehaviour
         {
             isProvoked = true;
         }
-        else 
+        else
         {
             animator.SetTrigger("Reset");
             animator.SetFloat("MoveSpeed", 0);
@@ -50,33 +50,52 @@ public class EnemyController : MonoBehaviour
 
     void ChaseTarget()
     {
-        animator.SetFloat("MoveSpeed", 1);
-        navMeshAgent.SetDestination(target.position);
+        if (!isAttacking)
+        {
+            animator.SetFloat("MoveSpeed", 1);
+            navMeshAgent.isStopped = false;
+            navMeshAgent.SetDestination(target.position);
+        }
     }
 
     void EngageTarget()
     {
-        if (distanceToTarget >= navMeshAgent.stoppingDistance)
+        if (!isAttacking)
         {
-            ChaseTarget();
-            
-        }
-
-        if (distanceToTarget <= navMeshAgent.stoppingDistance)
-        {
-            AttackTarget();
-            isAttacking = true;
+            if (distanceToTarget >= navMeshAgent.stoppingDistance)
+            {
+                ChaseTarget();
+            }
+            else if (distanceToTarget <= navMeshAgent.stoppingDistance)
+            {
+                StartCoroutine(AttackTarget());
+            }
         }
     }
 
-    void AttackTarget()
+    IEnumerator AttackTarget()
     {
-        if (!isAttacking)
+        isAttacking = true;
+        navMeshAgent.isStopped = true;
+        animator.SetTrigger("Attack");
+
+        Debug.Log(name + " has seeked and is attacking " + target.name);
+
+        yield return new WaitForSeconds(1.5f);
+
+        distanceToTarget = Vector3.Distance(target.position, transform.position);
+
+        if (distanceToTarget > navMeshAgent.stoppingDistance)
         {
-            animator.SetTrigger("Attack");
+            isAttacking = false;
+            navMeshAgent.isStopped = false;
+            ChaseTarget();
         }
-        //isAttacking = false;
-        Debug.Log(name + "has seeked and is attacking" + target.name);
+        else
+        {
+            isAttacking = false;
+        }
+        //Debug.Log(name + "has seeked and is attacking" + target.name);
     }
 
     private void OnDrawGizmos()
