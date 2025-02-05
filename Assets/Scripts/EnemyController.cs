@@ -88,6 +88,11 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 
+    public void DamageTaken()
+    {
+        isProvoked = true;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
