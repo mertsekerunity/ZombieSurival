@@ -28,11 +28,11 @@ public class EnemyController : MonoBehaviour
     {
         distanceToTarget = Vector3.Distance(target.position, transform.position);
 
-        if (!isProvoked)
-        {
-            Debug.Log("is provoked: " + isProvoked);
-            Debug.Log("distance to target is: " + distanceToTarget);
-        }
+        //if (!isProvoked)
+        //{
+        //    Debug.Log("is provoked: " + isProvoked);
+        //    Debug.Log("distance to target is: " + distanceToTarget);
+        //}
         
 
         if (isProvoked)
