@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] float chaseRange = 10f;
+    [SerializeField] float turnSpeed = 5f;
 
     float distanceToTarget = Mathf.Infinity;
 
@@ -59,6 +60,8 @@ public class EnemyController : MonoBehaviour
 
     void EngageTarget()
     {
+        FaceTarget();
+
         if (distanceToTarget >= navMeshAgent.stoppingDistance)
         {
             ChaseTarget();
@@ -78,7 +81,14 @@ public class EnemyController : MonoBehaviour
         Debug.Log(name + "has seeked and is attacking" + target.name);
     }
 
-    private void OnDrawGizmos()
+    void FaceTarget()
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+    }
+
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, chaseRange);
