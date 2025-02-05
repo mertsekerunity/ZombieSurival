@@ -9,7 +9,7 @@ public class EnemyAttack : MonoBehaviour
 
     public void AttackHitEvent()
     {
-        if (target != null) { return; }
+        if (target == null) { return; }
         Debug.Log("Dealt" + damage + "damage");
         target.GetComponent<PlayerHealth>().TakeDamage(damage);
     }
