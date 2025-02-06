@@ -33,7 +33,7 @@ public class EnemyController : MonoBehaviour
         //    Debug.Log("is provoked: " + isProvoked);
         //    Debug.Log("distance to target is: " + distanceToTarget);
         //}
-        
+
 
         if (isProvoked)
         {
@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
         {
             isProvoked = true;
         }
-        else 
+        else
         {
             isProvoked = false;
             animator.SetBool("Attack", false);
@@ -65,7 +65,7 @@ public class EnemyController : MonoBehaviour
         if (distanceToTarget >= navMeshAgent.stoppingDistance)
         {
             ChaseTarget();
-            
+
         }
 
         if (distanceToTarget <= navMeshAgent.stoppingDistance)
@@ -84,7 +84,7 @@ public class EnemyController : MonoBehaviour
     void FaceTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0,direction.z));
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 
