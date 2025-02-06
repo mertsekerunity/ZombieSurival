@@ -8,6 +8,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] float healthPoints = 100f;
     Animator animator;
     float destroyDelay = 1.5f;
+    bool isDead = false;
+
+    public bool IsDead() {  return isDead; }
 
     private void Awake()
     {
@@ -21,9 +24,16 @@ public class EnemyHealth : MonoBehaviour
         healthPoints -= damage;
         if (healthPoints <= 0)
         {
-            animator.SetTrigger("Dead");
-            GetComponent<NavMeshAgent>().enabled = false;
+            Death();
             Destroy(gameObject, destroyDelay);
         }
+    }
+
+    void Death()
+    {
+        if (isDead) { return; }
+        isDead = true;
+        GetComponent<NavMeshAgent>().enabled = false;
+        animator.SetTrigger("Dead");
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine;
 public class Ammo : MonoBehaviour
 {
     [SerializeField] AmmoSlot[] ammoSlots;
-    
+
     [System.Serializable]
-    
+
     private class AmmoSlot
     {
         public AmmoType ammoType;
@@ -28,11 +28,16 @@ public class Ammo : MonoBehaviour
     {
         foreach (AmmoSlot slot in ammoSlots)
         {
-            if(slot.ammoType == ammoType)
+            if (slot.ammoType == ammoType)
             {
                 return slot;
             }
         }
         return null;
+    }
+
+    public void IncreaseCurrentAmmo(AmmoType ammoType, int ammoAmount)
+    {
+        GetAmmoSlot(ammoType).ammoAmount += ammoAmount;
     }
 }

@@ -15,25 +15,21 @@ public class EnemyController : MonoBehaviour
 
     Animator animator;
     NavMeshAgent navMeshAgent;
+    EnemyHealth enemyHealth;
 
     // Start is called before the first frame update
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        distanceToTarget = Vector3.Distance(target.position, transform.position);
 
-        //if (!isProvoked)
-        //{
-        //    Debug.Log("is provoked: " + isProvoked);
-        //    Debug.Log("distance to target is: " + distanceToTarget);
-        //}
-        
+        distanceToTarget = Vector3.Distance(target.position, transform.position);        
 
         if (isProvoked)
         {
