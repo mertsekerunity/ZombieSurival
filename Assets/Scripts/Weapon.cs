@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] Ammo ammoSlot;
     [SerializeField] float timeBetweenShots = 0.5f;
     [SerializeField] AmmoType ammoType;
+    [SerializeField] TextMeshProUGUI ammoText;
 
     bool canShoot = true;
 
@@ -30,6 +32,8 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DisplayAmmo();
+
         if (Input.GetMouseButtonDown(0) && canShoot)
         {
             StartCoroutine(Shoot());
@@ -81,5 +85,12 @@ public class Weapon : MonoBehaviour
         GameObject impact = Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
 
         Destroy(impact, 0.05f);
+    }
+
+    void DisplayAmmo()
+    {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+
+        ammoText.text = currentAmmo.ToString();
     }
 }
