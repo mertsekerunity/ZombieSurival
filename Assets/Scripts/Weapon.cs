@@ -14,8 +14,12 @@ public class Weapon : MonoBehaviour
     [SerializeField] Ammo ammoSlot;
     [SerializeField] float timeBetweenShots = 0.5f;
     [SerializeField] AmmoType ammoType;
-    [SerializeField] TextMeshProUGUI ammoText;
+    [SerializeField] TextMeshProUGUI ammoUsableText;
+    [SerializeField] TextMeshProUGUI ammoReservedText;
 
+    PlayerStealth playerStealth;
+
+    public WeaponType weaponType;
     public bool canShoot = true;
 
     private void OnEnable()
@@ -26,17 +30,34 @@ public class Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        playerStealth = FindObjectOfType<PlayerStealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
         DisplayAmmo();
-
-        if (Input.GetMouseButtonDown(0) && canShoot)
+        if (weaponType == WeaponType.Rifles)
         {
-            StartCoroutine(Shoot());
+            if (Input.GetMouseButton(0) && canShoot)
+            {
+                StartCoroutine(Shoot());
+            }
+        }
+
+        if (weaponType == WeaponType.Shotguns || weaponType == WeaponType.Pistols)
+        {
+            if (Input.GetMouseButtonDown(0) && canShoot)
+            {
+                StartCoroutine(Shoot());
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            canShoot = false;
+            ammoSlot.ReloadWeapon(ammoType);
+            canShoot = true;
         }
     }
 
@@ -44,8 +65,9 @@ public class Weapon : MonoBehaviour
     {
         canShoot = false;
 
-        if (ammoSlot.GetCurrentAmmo(ammoType) > 0)
+        if (ammoSlot.GetCurrentUsableAmmo(ammoType) > 0)
         {
+            playerStealth.isStealth = false;
             PlayMuzzleFlash();
             ProcessRaycast();
             ammoSlot.ReduceCurrentAmmo(ammoType);
@@ -89,8 +111,10 @@ public class Weapon : MonoBehaviour
 
     void DisplayAmmo()
     {
-        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        int currentUsableAmmo = ammoSlot.GetCurrentUsableAmmo(ammoType);
+        int currentReservedAmmo = ammoSlot.GetCurrentReservedAmmo(ammoType);
 
-        ammoText.text = currentAmmo.ToString();
+        ammoUsableText.text = currentUsableAmmo.ToString();
+        ammoReservedText.text = currentReservedAmmo.ToString();
     }
 }

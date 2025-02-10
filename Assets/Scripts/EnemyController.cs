@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     Animator animator;
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
+    PlayerStealth playerStealth;
 
     // Start is called before the first frame update
     void Start()
@@ -24,11 +25,16 @@ public class EnemyController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         enemyHealth = GetComponent<EnemyHealth>();
         target = FindObjectOfType<PlayerHealth>().transform;
+        playerStealth = FindObjectOfType<PlayerStealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (playerStealth.isStealth) 
+        {
+            isProvoked = false;
+        }
 
         distanceToTarget = Vector3.Distance(target.position, transform.position);        
 
